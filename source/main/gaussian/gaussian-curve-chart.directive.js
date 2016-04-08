@@ -60,7 +60,7 @@ angular.module('optionsAnalyzer')
               var xAxis = d3.svg.axis()
               .scale(x)
               .orient("bottom")
-              .tickValues(d3.range(scope.sd3Arr[0] , scope.sd3Arr[1] , 10))
+              .tickValues(d3.range(scope.sd3Arr[0]- scope.sd3Arr[0]%10 , scope.sd3Arr[1] , 10))
 
 
               var yAxis = d3.svg.axis()
@@ -187,7 +187,7 @@ angular.module('optionsAnalyzer')
                     return d
             })
 
-
+            console.log(scope.chartParams.chain);
 
 
 

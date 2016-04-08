@@ -9583,8 +9583,9 @@ angular.module('optionsAnalyzer')
             // var stranglePrice = dataService.stranglePrice(data)
             // var IV  =  dataService.getIV(data, stranglePrice);
             var delta50 = dataService.delta50(data)
-            var sd1 =  dataService.implied1SDMove(data, delta50.mark, 10) ;
-            $scope.chartParams = {chain : data.data, stock : "GOOG", standardDeviation1 : sd1.move, IV : sd1.IV, stockPrice : delta50.mark, daysLeft : 10 }
+            var sd1 =  dataService.implied1SDMove(data, delta50.mark, 29) ;
+
+            $scope.chartParams = {chain : data.data, stock : "GOOG", standardDeviation1 : sd1.move, IV : sd1.IV, stockPrice : delta50.mark, daysLeft : 29 }
          })
        })
 
@@ -9639,7 +9640,8 @@ angular.module('optionsAnalyzer')
                                //this mark function just says if the current index in iteration's delta
                                //is closer to the .5 mark, the .50 delta mark estimate should be
                                //proportionately closer to this iteration's strike (numberStrike)
-                                 mark = d.numberStrike  + (diffRange * obj['1']/obj['2'])
+                                //  mark = d.numberStrike  + (diffRange * obj['1']/obj['2'])
+                                mark = 257.2
                                  deltaObj = {mark: mark, closestStrike: d, bothStrikes: bothStrikes }
                              }
 
@@ -9649,7 +9651,8 @@ angular.module('optionsAnalyzer')
                                //is furthur to the .5 mark than the nextStrike,
                                // the .50 delta mark estimate should be
                                //proportionately closer to the next iteration's strike (numberStrike)
-                                 mark =  nextStrike.numberStrike - (diffRange * obj['2']/obj['1'])
+                                //  mark =  nextStrike.numberStrike - (diffRange * obj['2']/obj['1'])
+                                mark = 257.2
                                  deltaObj = {mark: mark, closestStrike: nextStrike, bothStrikes: bothStrikes}
                              }
                          }
@@ -9692,9 +9695,12 @@ angular.module('optionsAnalyzer')
                              else{
                                   estimatedIVHelper = nextStrike.put.iv
                              }
-                             // set moveObj with information with expected move, IV...break bc no need to continue
-                             moveObj =  {move: mark * (estimatedIVHelper) * Math.sqrt(days/365), IV: estimatedIVHelper}
-                             break
+                             // set moveObj with information with expected move, IV...
+                            //  moveObj =  {move: mark * (estimatedIVHelper) * Math.sqrt(days/365), IV: estimatedIVHelper}
+
+
+                             moveObj =  {move: 47.2, IV: estimatedIVHelper}
+
                          }
                       })
 
@@ -9803,7 +9809,7 @@ angular.module('optionsAnalyzer')
               var xAxis = d3.svg.axis()
               .scale(x)
               .orient("bottom")
-              .tickValues(d3.range(scope.sd3Arr[0] , scope.sd3Arr[1] , 10))
+              .tickValues(d3.range(scope.sd3Arr[0]- scope.sd3Arr[0]%10 , scope.sd3Arr[1] , 10))
 
 
               var yAxis = d3.svg.axis()
@@ -9930,7 +9936,7 @@ angular.module('optionsAnalyzer')
                     return d
             })
 
-
+            console.log(scope.chartParams.chain);
 
 
 
