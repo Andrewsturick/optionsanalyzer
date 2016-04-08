@@ -9608,31 +9608,48 @@ angular.module('optionsAnalyzer')
 
 
                  data.data.map(function(d,i, arr){
-                     ///next index in array is next strike higher at this point
+                     ///next index in array is next strike higher at this point in iteration
                      var nextStrike = arr[i + 1]
 
                      //finds the two strikes on either side of the .50 delta mark
                      if(d.call.delta > 0.5 && nextStrike.call.delta < 0.5){
 
 
+
+
+
+                         //this just tells how far delta for d and nextStrike are from .50 delta mid point
                          var obj = {}
-                         obj['1'] = Math.abs(d.call.delta - 0.5)*10
-                         obj['2'] = Math.abs(nextStrike.call.delta - 0.5)*10
+                         obj['1'] = Math.abs(d.call.delta - 0.5)
+                         obj['2'] = Math.abs(nextStrike.call.delta - 0.5)
 
                          var mark, object50,
+                         // gives distance between the strikes above and below .5 delta
                              diffRange = Math.abs(d.numberStrike - nextStrike.numberStrike),
+
+
+                             //array of strikes before and after the .50 delta mark in chain
+                             //go to in returned object
                              bothStrikes = [d, nextStrike]
 
-                             //depending on which it is closer to.and how much closer,
-                             //determine rough estimate of 50 delta, closest strike,
+                             //depending on which it is closer to .50 delta mark, and how much closer...
+                             //determine rough estimate of .50 delta (mark), closest strike (closestStrike),
                              //and array : [strikeBelow50DELTA, strikeAbove50DELTA ]
-                             if(obj['1']< obj['2']){
-                                 mark = nextStrike.numberStrike - (diffRange * obj['1']/obj['2'])
+                             if(obj['1'] < obj['2']){
+                               //this mark function just says if the current index in iteration's delta
+                               //is closer to the .5 mark, the .50 delta mark estimate should be
+                               //proportionately closer to this iteration's strike (numberStrike)
+                                 mark = d.numberStrike  + (diffRange * obj['1']/obj['2'])
                                  deltaObj = {mark: mark, closestStrike: d, bothStrikes: bothStrikes }
                              }
 
                              else{
-                                 mark = d.numberStrike +  (diffRange * obj['2']/obj['1'])
+                               //this does just the opposite as above,
+                               // says if the current index in iteration's delta
+                               //is furthur to the .5 mark than the nextStrike,
+                               // the .50 delta mark estimate should be
+                               //proportionately closer to the next iteration's strike (numberStrike)
+                                 mark =  nextStrike.numberStrike - (diffRange * obj['2']/obj['1'])
                                  deltaObj = {mark: mark, closestStrike: nextStrike, bothStrikes: bothStrikes}
                              }
                          }
@@ -9648,26 +9665,36 @@ angular.module('optionsAnalyzer')
 ///////////////
 
              this.implied1SDMove = function (data, mark, days) {
-                    var estimatedIVHelper,moveObj;
-                    console.log(data.data);
+                    data = data.data
 
-                    data.data.map(function(d, i , arr){
+                    var estimatedIVHelper,moveObj;
+
+                    data.map(function(d, i , arr){
                         var nextStrike =   arr[i + 1]
 
-                        if(d.put.delta > -0.3 && nextStrike.put.delta < -0.3){
+                        //isolates the strikes above and below the .32 delta mark
+                        //as it seems to be decent indicator of overall month's IV...
+                        //there is NO INFO OUT THERE OR COMMON MODELS on how to
+                        //direve an expy's overall IV..so this is my best guess...
+                        if(d.put.delta > -0.32 && nextStrike.put.delta < -0.32){
 
+                             //same as above, make object with two keys, each containing
+                             //the key's distance from the 0.5 delta price
                              var obj = {}
-                             obj['1'] = Math.abs(d.put.delta - 0.5)*10
-                             obj['2'] = Math.abs(nextStrike.put.delta - 0.5)*10
+                             obj['1'] = Math.abs(d.put.delta - 0.5)
+                             obj['2'] = Math.abs(nextStrike.put.delta - 0.5)
 
-
+                             // this if else statement simply sets estimated iv
+                             //for month based on 32 delta put iv...
                              if (obj['1'] < obj['2']) {
                                   estimatedIVHelper = d.put.iv
                              }
                              else{
                                   estimatedIVHelper = nextStrike.put.iv
                              }
-                            moveObj =  {move: mark * (estimatedIVHelper) * Math.sqrt(days/365), IV: estimatedIVHelper}
+                             // set moveObj with information with expected move, IV...break bc no need to continue
+                             moveObj =  {move: mark * (estimatedIVHelper) * Math.sqrt(days/365), IV: estimatedIVHelper}
+                             break
                          }
                       })
 
@@ -9679,12 +9706,20 @@ angular.module('optionsAnalyzer')
 
 
                     this.makeSDLines = function(data, percentage, stockPrice, x){
-
+                      ///in this function the data is the chain, the percentage passed in
+                      //is the desired probability density..
                         var sd1ArrA = []
                         var sd1ArrB = []
 
                         data.map(function(d, i){
+                          //sets variable diff to distance between desired probabilitiy ITM
+                          //and the current strike's probability ITM
                           var diff = d.p - percentage
+                        //if the probability is within .005 of the percentage you want,
+                        //push it into a collection.. since we need both sides of the curve
+                        //make one array for above the stock price(sd1Arr1), and one below the
+                        //stock price(sd1ArrB)
+
                           if(d.q > stockPrice && diff < 0.005 && diff > 0){
                             sd1ArrA.push(d)
                           }
@@ -9694,6 +9729,9 @@ angular.module('optionsAnalyzer')
                         })
 
                         sd1Arr = []
+
+                        //take the means of both arrays, and create an array
+                        //of our estimated x values for the desired probability ITM (our var percentage)
                         sd1Arr[0] = x(d3.mean(sd1ArrA, function(d){return d.q}));
                         sd1Arr[1] = x(d3.mean(sd1ArrB, function(d){return d.q}));
 
@@ -9701,8 +9739,7 @@ angular.module('optionsAnalyzer')
                         return sd1Arr
                     }
                  })
-            //    }
-            // })
+                                //BOOM
 
 angular.module('optionsAnalyzer')
 
@@ -9917,11 +9954,20 @@ angular.module('optionsAnalyzer')
             // https://github.com/jasondavies/science.js/
             function gaussian(x) {
             	var gaussianConstant = 1 / Math.sqrt(2 * Math.PI),
+
+              ///again this is just a guess...as we can determine sigma (sd1 from
+            //implied volatility, and the models seem to align with how brokers are modeling this
+
             		mean = scope.chartParams.stockPrice,
                 sigma = scope.chartParams.standardDeviation1;
 
                 x = (x - mean) / sigma;
-                // *1.25 to make peak approach .5
+                //changes radius from 1 in example to standardDeviation1
+
+              //multiplied by 1.25 to amplify height of curve to .5 deltas....
+              //as gaussian random walk states stocks have a 50/50 chance
+              //(.5 probability density) of ending up above or below
+              //the current price (scope.chartParams.stockPrice)
                 return ((gaussianConstant * Math.exp(-.5 * x * x) / sigma) * 1.25 * scope.chartParams.standardDeviation1);
             };
 

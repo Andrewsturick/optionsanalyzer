@@ -211,11 +211,20 @@ angular.module('optionsAnalyzer')
             // https://github.com/jasondavies/science.js/
             function gaussian(x) {
             	var gaussianConstant = 1 / Math.sqrt(2 * Math.PI),
+
+              ///again this is just a guess...as we can determine sigma (sd1 from
+            //implied volatility, and the models seem to align with how brokers are modeling this
+
             		mean = scope.chartParams.stockPrice,
                 sigma = scope.chartParams.standardDeviation1;
 
                 x = (x - mean) / sigma;
-                // *1.25 to make peak approach .5
+                //changes radius from 1 in example to standardDeviation1
+
+              //multiplied by 1.25 to amplify height of curve to .5 deltas....
+              //as gaussian random walk states stocks have a 50/50 chance
+              //(.5 probability density) of ending up above or below
+              //the current price (scope.chartParams.stockPrice)
                 return ((gaussianConstant * Math.exp(-.5 * x * x) / sigma) * 1.25 * scope.chartParams.standardDeviation1);
             };
 
