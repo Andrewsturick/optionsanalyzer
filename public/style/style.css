@@ -1,0 +1,39 @@
+body {
+    min-height: 100vh;
+    width: 100%;
+    font: 10px sans-serif;
+    background-color: black;
+}
+gaussian-curve-chart .tick text {
+fill: #fff;
+}
+gaussian-curve-chart .axis path,
+gaussian-curve-chart .axis line {
+    fill: none;
+    stroke: #fff;
+    shape-rendering: crispEdges;
+}
+/*.x.axis path {
+    display: none;
+}*/
+/*gaussian-curve-chart .line {
+  fill: black;
+  stroke-width:4px;
+  stroke:#aaa;
+}*/
+
+/*gaussian-curve-chart{
+    background-color: #312A2A;
+};*/
+
+.line {
+  stroke-opacity: .6;
+  fill: black;
+  stroke-width:4px;
+  stroke:#aaa
+}
+
+#mainView{
+   min-height: 100vh;
+   background-color: black;
+}
