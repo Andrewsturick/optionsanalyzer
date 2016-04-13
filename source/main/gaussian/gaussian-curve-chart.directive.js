@@ -37,9 +37,11 @@ angular.module('optionsAnalyzer')
               var y = d3.scale.linear()
               .range([height, 0]);
 
+
+
+              //since we only want the chart to show between a 3 sd move in this case
               var sd3ArrA = []
               var sd3ArrB = []
-
               data.map(function(d, i){
                 var diff = d.p - 0.01
                 if(d.q < scope.chartParams.stockPrice && diff < 0.001 && diff > 0){
@@ -50,11 +52,16 @@ angular.module('optionsAnalyzer')
                 }
               })
               scope.sd3Arr = []
+              //basically same logic as dataService.makeSDlines, except i left
+              //the login in bc it servis a slightly different purpose
+              //and is used below for the tick values
               scope.sd3Arr[0] = d3.mean(sd3ArrA, function(d){return d.q});
               scope.sd3Arr[1] = d3.mean(sd3ArrB, function(d){return d.q});
 
 
-
+              //the tickValues reading here, just allows me to round the number out...In this case
+              /// to the nearest 10 dollar mark, but I will change to make dynamic rounding depending
+              //on stock price...aka stocks at 120 or less should probably show 1,2 or 5 dollar ticks
               var xAxis = d3.svg.axis()
               .scale(x)
               .orient("bottom")
@@ -104,6 +111,7 @@ angular.module('optionsAnalyzer')
 
 
               ///these arrays expose x coordinates for the standard deviation lines below
+              //allowing to dynamically create 1SD and 2SD line readings given an option chain..
               var sd1Arr = dataService.makeSDLines(data, 0.32, scope.chartParams.stockPrice, x)
               var sd2Arr = dataService.makeSDLines(data, 0.06, scope.chartParams.stockPrice, x)
 
@@ -164,8 +172,9 @@ angular.module('optionsAnalyzer')
                     "q": q,
                     "p": p
                 }
-
-                if(el['p'] > 0.0001 && el['q'] < scope.chartParams.stockPrice*2){  data.push(el)  };
+                //if prob ITM for this quantile sampleis greater than .0001
+                //or above 2double the stock price, leave them out, this cuts size of array down
+                if(el['p'] > 0.0001 && el['q'] < scope.chartParams.stockPrice * 2 ){  data.push(el)  };
 
 
             };
@@ -179,13 +188,12 @@ angular.module('optionsAnalyzer')
             });
 
 
-
+            //givies each option a prob ITM reading
             scope.chartParams.chain = scope.chartParams.chain.map(function(d, i){
                     scope.chartParams.chain[i].probITM = gaussian(d.numberStrike)
                     return d
             })
 
-            console.log(scope.chartParams.chain);
 
 
 
