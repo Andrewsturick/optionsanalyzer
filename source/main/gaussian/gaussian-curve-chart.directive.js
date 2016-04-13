@@ -9,7 +9,7 @@ angular.module('optionsAnalyzer')
           link: function(scope, el, attrs){
             //setting up empty data array
             var data = [];
-            scope.sd0Arr;
+            scope.sd3Arr;
             scope.$watch('chartParams', function(n,o){
               if(scope.chartParams){
                 getData()
