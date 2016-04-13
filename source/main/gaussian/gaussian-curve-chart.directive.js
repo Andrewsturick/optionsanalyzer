@@ -10,9 +10,7 @@ angular.module('optionsAnalyzer')
             //setting up empty data array
             var data = [];
             scope.sd0Arr;
-            console.log('');
             scope.$watch('chartParams', function(n,o){
-              console.log('watching scope');
               if(scope.chartParams){
                 getData()
                 renderChart()
@@ -21,7 +19,6 @@ angular.module('optionsAnalyzer')
             })
 
             function renderChart(){
-              console.log('rendering');
 
               // line chart based on http://bl.ocks.org/mbostock/3883245
 

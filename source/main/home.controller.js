@@ -1,6 +1,5 @@
 angular.module('optionsAnalyzer')
        .controller('HomeCtrl', function($scope, APIService,dataService){
-         console.log('doing anything againnnn');
          APIService.getData().then(function(data, err){
             // var stranglePrice = dataService.stranglePrice(data)
             // var IV  =  dataService.getIV(data, stranglePrice);
