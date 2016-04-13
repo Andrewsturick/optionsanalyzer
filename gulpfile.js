@@ -15,13 +15,13 @@ gulp.task('watch', function() {
 });
 
 gulp.task('build', ['clean'], function(){
+	gulp.src('assets/**/*')
+		.pipe(gulp.dest('public/assets'))
 	gulp.src('source/**/*.js')
 		.pipe(concat("bundle.js"))
 		.pipe(addsrc("source/**/*.html"))
-    .pipe(addsrc("source/**/*.css"))
+		.pipe(addsrc("source/**/*.css"))
 		.pipe(gulp.dest('public'))
-	gulp.src('assets/**/*')
-		.pipe(gulp.dest('public/assets'))
 	// gulp.src('d3threejsAssets/**/*')
 	// 	.pipe(gulp.dest('public/d3threejsAssets'))
 		.on('error', gutil.log)

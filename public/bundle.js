@@ -1,14 +1,16 @@
 angular.module('optionsAnalyzer', ['ui.router','d3'])
 
        .config(function($stateProvider, $urlRouterProvider){
-         console.log('anythingggaaa')
+
          $stateProvider
-         .state('main', {
+
+         .state('home', {
            url: '/',
            controller: 'HomeCtrl',
            templateUrl: '../main/home.html'
          })
-         $urlRouterProvider.otherwise('/1')
+
+         $urlRouterProvider.otherwise('/')
        })
 
 angular.module('d3', [])
@@ -9578,7 +9580,7 @@ angular.module('optionsAnalyzer')
 
 angular.module('optionsAnalyzer')
        .controller('HomeCtrl', function($scope, APIService,dataService){
-         console.log('doing anything a');
+         console.log('doing anything againnnn');
          APIService.getData().then(function(data, err){
             // var stranglePrice = dataService.stranglePrice(data)
             // var IV  =  dataService.getIV(data, stranglePrice);
@@ -9641,7 +9643,7 @@ angular.module('optionsAnalyzer')
                                //is closer to the .5 mark, the .50 delta mark estimate should be
                                //proportionately closer to this iteration's strike (numberStrike)
                                 //  mark = d.numberStrike  + (diffRange * obj['1']/obj['2'])
-                                mark = 257.2
+                                mark = 257
                                  deltaObj = {mark: mark, closestStrike: d, bothStrikes: bothStrikes }
                              }
 
@@ -9652,7 +9654,7 @@ angular.module('optionsAnalyzer')
                                // the .50 delta mark estimate should be
                                //proportionately closer to the next iteration's strike (numberStrike)
                                 //  mark =  nextStrike.numberStrike - (diffRange * obj['2']/obj['1'])
-                                mark = 257.2
+                                mark = 257
                                  deltaObj = {mark: mark, closestStrike: nextStrike, bothStrikes: bothStrikes}
                              }
                          }
@@ -9699,7 +9701,7 @@ angular.module('optionsAnalyzer')
                             //  moveObj =  {move: mark * (estimatedIVHelper) * Math.sqrt(days/365), IV: estimatedIVHelper}
 
 
-                             moveObj =  {move: 47.2, IV: estimatedIVHelper}
+                             moveObj =  {move: 44, IV: estimatedIVHelper}
 
                          }
                       })
@@ -9754,13 +9756,14 @@ angular.module('optionsAnalyzer')
           scope: {
             chartParams: "="
           },
-          templateUrl: '/main/gaussian/gaussian-curve-chart.html',
+          // templateUrl: './main/gaussian/gaussian-curve-chart.html',
           link: function(scope, el, attrs){
             //setting up empty data array
             var data = [];
-            scope.sd3Arr;
-
+            scope.sd0Arr;
+            console.log('');
             scope.$watch('chartParams', function(n,o){
+              console.log('watching scope');
               if(scope.chartParams){
                 getData()
                 renderChart()
@@ -9769,7 +9772,7 @@ angular.module('optionsAnalyzer')
             })
 
             function renderChart(){
-
+              console.log('rendering');
 
               // line chart based on http://bl.ocks.org/mbostock/3883245
 

@@ -5,13 +5,14 @@ angular.module('optionsAnalyzer')
           scope: {
             chartParams: "="
           },
-          templateUrl: '/main/gaussian/gaussian-curve-chart.html',
+          // templateUrl: './main/gaussian/gaussian-curve-chart.html',
           link: function(scope, el, attrs){
             //setting up empty data array
             var data = [];
-            scope.sd3Arr;
-
+            scope.sd0Arr;
+            console.log('');
             scope.$watch('chartParams', function(n,o){
+              console.log('watching scope');
               if(scope.chartParams){
                 getData()
                 renderChart()
@@ -20,7 +21,7 @@ angular.module('optionsAnalyzer')
             })
 
             function renderChart(){
-
+              console.log('rendering');
 
               // line chart based on http://bl.ocks.org/mbostock/3883245
 

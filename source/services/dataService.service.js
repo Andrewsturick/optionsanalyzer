@@ -43,7 +43,7 @@
                                //is closer to the .5 mark, the .50 delta mark estimate should be
                                //proportionately closer to this iteration's strike (numberStrike)
                                 //  mark = d.numberStrike  + (diffRange * obj['1']/obj['2'])
-                                mark = 257.2
+                                mark = 257
                                  deltaObj = {mark: mark, closestStrike: d, bothStrikes: bothStrikes }
                              }
 
@@ -54,7 +54,7 @@
                                // the .50 delta mark estimate should be
                                //proportionately closer to the next iteration's strike (numberStrike)
                                 //  mark =  nextStrike.numberStrike - (diffRange * obj['2']/obj['1'])
-                                mark = 257.2
+                                mark = 257
                                  deltaObj = {mark: mark, closestStrike: nextStrike, bothStrikes: bothStrikes}
                              }
                          }
@@ -101,7 +101,7 @@
                             //  moveObj =  {move: mark * (estimatedIVHelper) * Math.sqrt(days/365), IV: estimatedIVHelper}
 
 
-                             moveObj =  {move: 47.2, IV: estimatedIVHelper}
+                             moveObj =  {move: 44, IV: estimatedIVHelper}
 
                          }
                       })
